@@ -74,7 +74,6 @@ class ImageDownloaderApp(ctk.CTk):
     
     def download_images(self, query, num_images):
         try:
-            # FIX: Sanitize the query to remove invalid Windows characters for folder/file names
             clean_name = re.sub(r'[<>:"/\\|?*]', '', query).strip()
             if not clean_name: clean_name = "downloaded_images"
 
@@ -86,7 +85,6 @@ class ImageDownloaderApp(ctk.CTk):
             soup = BeautifulSoup(response.text, 'html.parser')
             img_tags = soup.find_all('img')
             
-            # Use the clean_name for the directory
             search_folder = os.path.join(self.download_folder, clean_name.replace(" ", "_"))
             os.makedirs(search_folder, exist_ok=True)
             
@@ -99,7 +97,6 @@ class ImageDownloaderApp(ctk.CTk):
                 
                 try:
                     img_data = requests.get(img_url, headers=headers, timeout=10).content
-                    # Use clean_name for the file as well
                     file_path = os.path.join(search_folder, f"{clean_name}_{downloaded+1}.jpg")
                     
                     with open(file_path, 'wb') as f:
